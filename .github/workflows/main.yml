@@ -6,18 +6,14 @@ on:
       - master
   pull_request:
 
+# Example GitHub Actions configuration
 jobs:
   analyze-dependencies:
     runs-on: ubuntu-latest
-
+    container: madhukaraman/dependency-generator-core:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Analyze dependencies
-        uses: addnab/docker-run-action@v3
-        with:
-          image: madhukaraman/dependency-generator-core:latest
-          options: -v ${{ github.workspace }}  # Mount to /app instead of /workspace
-          run: |
-            node src/index.js --dir /repo --output /output/dependency-graph.json --send
+        # The src/index.js is the dependency generator script inside the container, not in your repo
+        run: cd /app && node src/index.js --dir $GITHUB_WORKSPACE --send
